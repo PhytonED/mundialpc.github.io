@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Ruleta PC - Desafíos Mundial 2026 | Estilo Genially</title>
+  <style>
+    * {
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #00355C;
+      font-family: 'Poppins', 'Segoe UI', Roboto, system-ui, sans-serif;
+      margin: 0;
+      padding: 2rem 1.2rem;
+      color: #1F3A4B;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Bandera de Uruguay como fondo watermarked */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400"><rect width="600" height="400" fill="white"/><g fill="%2300355C"><rect y="0" width="600" height="40"/><rect y="80" width="600" height="40"/><rect y="160" width="600" height="40"/><rect y="240" width="600" height="40"/><rect y="320" width="600" height="40"/></g><circle cx="120" cy="200" r="60" fill="%23F5C542"/><circle cx="120" cy="200" r="48" fill="%23F5C542"/><g stroke="%238B5A2B" stroke-width="4" fill="none"><line x1="120" y1="140" x2="120" y2="260"/><line x1="60" y1="200" x2="180" y2="200"/><line x1="77" y1="157" x2="163" y2="243"/><line x1="163" y1="157" x2="77" y2="243"/></g></svg>');
+      background-repeat: repeat;
+      background-size: 140px auto;
+      opacity: 0.07;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      padding: 1.8rem;
+      backdrop-filter: blur(2px);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Encabezado estilo Genially */
+    .header-genially {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .header-genially h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #00355C, #F5C542);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 0.3rem;
+    }
+    .header-genially p {
+      color: #2C5A7A;
+      font-weight: 500;
+      border-top: 2px dashed #F5C542;
+      display: inline-block;
+      padding-top: 0.3rem;
+    }
+
+    /* Panel de puntuación flotante */
+    .score-card {
+      background: linear-gradient(120deg, #F5C542, #FFE0A3);
+      border-radius: 3rem;
+      padding: 0.5rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 14px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+    .score-label {
+      font-weight: 800;
+      color: #00355C;
+      font-size: 1.1rem;
+    }
+    .score-value {
+      background: #00355C;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 3rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    /* Formulario estudiante estilo tarjeta */
+    .student-card {
+      background: #F0F7FF;
+      border-radius: 1.8rem;
+      padding: 1rem 1.3rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.05);
+    }
+    .student-field {
+      flex: 1;
+      min-width: 120px;
+    }
+    .student-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #00355C;
+      margin-bottom: 0.2rem;
+    }
+    .student-field input, .student-field select {
+      width: 100%;
+      padding: 0.5rem 0.8rem;
+      border-radius: 3rem;
+      border: 1px solid #C7DDF5;
+      background: white;
+      font-size: 0.9rem;
+    }
+    .btn-guardar {
+      background: #00355C;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 3rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-guardar:hover {
+      background: #F5C542;
+      color: #00355C;
+    }
+
+    /* Panel ruleta */
+    .ruleta-card {
+      background: #FFFFFF;
+      border-radius: 2rem;
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      border: 1px solid #FFE2A4;
+    }
+    .skills-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+    .skill-badge {
+      background: #E2EAF3;
+      padding: 0.4rem 0.9rem;
+      border-radius: 3rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #00355C;
+      transition: 0.1s;
+    }
+    .spin-button {
+      background: #F5C542;
+      border: none;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 0.7rem 2rem;
+      border-radius: 3rem;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #b37b2e;
+      transition: 0.05s linear;
+      margin: 0.5rem;
+    }
+    .spin-button:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+    .selected-skill {
+      background: #00355C;
+      color: white;
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      border-radius: 3rem;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* Acordeón explicación */
+    .accordion {
+      background: #FEF9E6;
+      border-radius: 1.5rem;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid #F5C542;
+    }
+    .accordion summary {
+      font-weight: bold;
+      cursor: pointer;
+      color: #00355C;
+      padding: 0.3rem;
+    }
+
+    /* Tarjeta de desafío */
+    .challenge-card {
+      background: white;
+      border-radius: 2rem;
+      border: 2px solid #F5C542;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 15px 25px -10px rgba(0,0,0,0.1);
+    }
+    .story-box {
+      background: #FEF9E6;
+      padding: 0.8rem;
+      border-radius: 1.2rem;
+      margin-bottom: 0.8rem;
+      border-left: 6px solid #F5C542;
+    }
+    .prompt-box {
+      background: #E6F0FA;
+      padding: 0.8rem;
+      border-radius: 1.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .options-list {
+      list-style: none;
+      margin: 0.8rem 0;
+    }
+    .options-list li {
+      background: #F8FBFE;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 3rem;
+      padding-left: 1rem;
+    }
+    .answer-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .answer-select {
+      padding: 0.5rem;
+      border-radius: 3rem;
+      border: 1px solid #9BB7D4;
+      background: white;
+    }
+    .save-btn {
+      background: #00355C;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 3rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .feedback {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+    .progress {
+      text-align: center;
+      font-weight: bold;
+      background: #EFF3F8;
+      padding: 0.5rem;
+      border-radius: 2rem;
+      margin: 1rem 0;
+    }
+    .download-btn {
+      background: #2E7D32;
+      color: white;
+      border: none;
+      padding: 0.7rem;
+      border-radius: 3rem;
+      font-weight: bold;
+      width: 100%;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.2s;
+    }
+    .download-btn:hover {
+      background: #1B5E20;
+    }
+    .footer {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #6F8FAC;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header-genially">
+    <h1>⚽ Ruleta del Pensamiento Computacional</h1>
+    <p>Mundial 2026 · Desafíos interactivos estilo Genially</p>
+  </div>
+
+  <!-- Puntuación -->
+  <div class="score-card">
+    <span class="score-label">🏆 PUNTAJE ACUMULADO</span>
+    <span class="score-value" id="scoreDisplay">0 puntos</span>
+  </div>
+
+  <!-- Datos del estudiante con grupos y lista -->
+  <div class="student-card">
+    <div class="student-field">
+      <label>📌 Grupo</label>
+      <select id="grupoSelect">
+        <option value="7º">7º</option>
+        <option value="8º">8º</option>
+        <option value="9º1">9º1</option>
+        <option value="9º2">9º2</option>
+      </select>
+    </div>
+    <div class="student-field">
+      <label>🔢 Número de lista</label>
+      <select id="listaSelect">
+        <option value="">-- Selecciona --</option>
+      </select>
+    </div>
+    <div class="student-field">
+      <label>👤 Nombre</label>
+      <input type="text" id="nombreInput" placeholder="Nombre" autocomplete="off">
+    </div>
+    <div class="student-field">
+      <label>📛 Apellido</label>
+      <input type="text" id="apellidoInput" placeholder="Apellido" autocomplete="off">
+    </div>
+    <button class="btn-guardar" id="guardarDatosBtn">Guardar datos</button>
+  </div>
+  <div id="studentConfirm" style="font-size:0.75rem; text-align:center; margin-bottom:1rem;"></div>
+
+  <!-- Ruleta y destrezas -->
+  <div class="ruleta-card">
+    <div><strong>🎯 Destrezas del Pensamiento Computacional</strong></div>
+    <div class="skills-cloud" id="skillsContainer"></div>
+    <button class="spin-button" id="spinBtn">🎲 GIRAR RULETA 🎲</button>
+    <div id="selectedSkillDisplay" class="selected-skill">Esperando giro...</div>
+    <details class="accordion">
+      <summary>📚 ¿Qué significa cada destreza?</summary>
+      <p><strong>Abstracción:</strong> Enfocarse en lo esencial, ignorar lo superfluo.</p>
+      <p><strong>Reconocimiento de patrones:</strong> Identificar regularidades y secuencias.</p>
+      <p><strong>Descomposición:</strong> Dividir un problema en partes más pequeñas.</p>
+      <p><strong>Pensamiento algorítmico:</strong> Crear pasos ordenados para resolver tareas.</p>
+      <p><strong>Depuración:</strong> Encontrar y corregir errores en algoritmos.</p>
+      <p><strong>Generalización:</strong> Aplicar una solución a problemas similares.</p>
+      <p><strong>Simulación:</strong> Modelar el comportamiento de un sistema.</p>
+      <p><strong>Evaluación:</strong> Comparar soluciones para elegir la óptima.</p>
+    </details>
+  </div>
+
+  <!-- Área de desafío actual -->
+  <div id="challengeArea" style="display: none;"></div>
+
+  <div class="progress" id="progressInfo">Desafíos respondidos: 0 / 48</div>
+  <button class="download-btn" id="finishBtn">📥 Finalizar y descargar informe</button>
+  <div class="footer">🔒 Medidas de seguridad: no se puede copiar texto ni abrir herramientas de desarrollador.</div>
+</div>
+
+<script>
+  // ------------------------------------------------------------
+  // CORRECT ANSWERS (para puntuación automática)
+  // ------------------------------------------------------------
+  const correctAnswers = {
+    1: "C", 2: "A", 3: "C", 4: "A", 5: "B", 6: "B", 7: "D", 8: "B", 9: "B", 10: "C",
+    11: "A", 12: "A", 13: "B", 14: "A", 15: "A", 16: "B", 17: "A", 18: "B", 19: "A", 20: "A",
+    21: "A", 22: "B", 23: "C", 24: "A", 25: "A", 26: "A", 27: "B", 28: "B", 29: "A", 30: "B",
+    31: "C", 32: "C", 33: "C", 34: "C", 35: "A", 36: "A", 37: "A", 38: "B", 39: "D", 40: "A",
+    41: "A", 42: "C", 43: "B", 44: "A", 45: "D", 46: "B", 47: "B", 48: "A"
+  };
+
+  const skills = [
+    "Abstracción", "Reconocimiento de patrones", "Descomposición",
+    "Pensamiento algorítmico", "Depuración", "Generalización",
+    "Simulación", "Evaluación"
+  ];
+
+  // ------------------------------------------------------------
+  // DESAFÍOS (48) con narrativa y opciones
+  // ------------------------------------------------------------
+  const challengesData = [
+    { id:1, skill:"Reconocimiento de patrones", story:"Las luces del estadio Centenario parpadean en secuencia: azul, blanco, azul, blanco, amarillo, y se repiten sin parar.", prompt:"¿De qué color es la 10ª luz?", options:["A) Azul","B) Blanco","C) Amarillo","D) Verde"] },
+    { id:2, skill:"Pensamiento algorítmico", story:"Juan, Pedro y Luis se pasan la pelota: Juan→Pedro→Luis→Juan...", prompt:"¿Quién recibe el pase número 7?", options:["A) Juan","B) Pedro","C) Luis","D) Nadie"] },
+    { id:3, skill:"Abstracción", story:"Uruguay: 2 goles 1er tiempo, 1 gol 2do. Brasil: 0 y 3.", prompt:"¿Resultado final?", options:["A) Uruguay","B) Brasil","C) Empate","D) No se sabe"] },
+    { id:4, skill:"Pensamiento algorítmico", story:"VAR revisa cada 3 min. Primera revisión 15:00.", prompt:"¿4ª revisión?", options:["A) 15:09","B) 15:12","C) 15:15","D) 15:06"] },
+    { id:5, skill:"Reconocimiento de patrones", story:"Números de camiseta: 10,12,14,16...", prompt:"¿Siguiente número?", options:["A) 17","B) 18","C) 20","D) 22"] },
+    { id:6, skill:"Abstracción", story:"Arquero ataja 2 de cada 5 penales. Enfrenta 15.", prompt:"¿Cuántos ataja?", options:["A) 4","B) 6","C) 8","D) 10"] },
+    { id:7, skill:"Reconocimiento de patrones", story:"Banderines: amarillo, celeste, blanco, gris (rotación). 1º amarillo.", prompt:"¿20º banderín?", options:["A) Amarillo","B) Celeste","C) Blanco","D) Gris"] },
+    { id:8, skill:"Generalización", story:"Patrón: 2 amarillas, 1 roja, se repite.", prompt:"En 12 tarjetas, ¿cuántas rojas?", options:["A) 3","B) 4","C) 5","D) 6"] },
+    { id:9, skill:"Abstracción", story:"Himno dura 90s, suena 5 veces.", prompt:"¿Minutos totales?", options:["A) 6","B) 7.5","C) 8","D) 9"] },
+    { id:10, skill:"Descomposición", story:"3 corners primer tiempo, 2 segundo. Cada corner: 2 lanzamientos.", prompt:"Total lanzamientos al área", options:["A) 5","B) 8","C) 10","D) 12"] },
+    { id:11, skill:"Pensamiento algorítmico", story:"Partido 15:00, 90 min + 4 descuento.", prompt:"¿Hora final?", options:["A) 16:34","B) 16:30","C) 16:24","D) 16:20"] },
+    { id:12, skill:"Generalización", story:"Cantan 'U-ru-guay' cada 2 segundos.", prompt:"Veces en 1 minuto", options:["A) 30","B) 20","C) 25","D) 15"] },
+    { id:13, skill:"Depuración", story:"Regla fuera de juego: atacante detrás último defensor Y pase adelante. ¿Qué excepción invalida?", prompt:"¿Cuál?", options:["A) Propio campo","B) Saque de banda","C) Defensor lesionado","D) Árbitro no vio"] },
+    { id:14, skill:"Pensamiento algorítmico", story:"Entrenador: gana→cambia defensor, pierde→delantero, empate→no cambios. Marcador 2-0.", prompt:"¿Qué hace?", options:["A) Sustituye defensor","B) Sustituye delantero","C) No cambia","D) Sustituye arquero"] },
+    { id:15, skill:"Simulación", story:"Partidos: 15,17,19hs con 30min entre. Cada partido 90min.", prompt:"¿Hora fin último?", options:["A) 20:30","B) 20:45","C) 21:00","D) 21:15"] },
+    { id:16, skill:"Reconocimiento de patrones", story:"Amonestaciones: amarilla, amarilla, roja... 20 jugadores.", prompt:"¿Cuántas rojas?", options:["A) 5","B) 6","C) 7","D) 8"] },
+    { id:17, skill:"Abstracción", story:"Rutas V-LA=5, LA-MX=3, MX-MI=4, MI-V=7. Inicio y fin en V.", prompt:"Ruta más corta", options:["A) V-LA-MX-MI-V","B) V-MI-MX-LA-V","C) V-LA-MI-MX-V","D) V-MX-LA-MI-V"] },
+    { id:18, skill:"Depuración", story:"Código: goles=0; repetir5: goles+=2; si gana +1 (olvidado).", prompt:"Goles calculados siempre", options:["A) 5","B) 10","C) 11","D) 12"] },
+    { id:19, skill:"Abstracción", story:"Puntos: Uruguay3, Brasil1, Argentina4, Chile0.", prompt:"Promedio", options:["A) 2","B) 2.5","C) 3","D) 1.5"] },
+    { id:20, skill:"Generalización", story:"Octavos: 16 equipos, cada partido elimina 1.", prompt:"Partidos hasta campeón", options:["A) 15","B) 16","C) 31","D) 8"] },
+    { id:21, skill:"Reconocimiento de patrones", story:"Pases: 1,2,3,4,1... Pase 1 lo recibe jugador1.", prompt:"Pase 25", options:["A) 1","B) 2","C) 3","D) 4"] },
+    { id:22, skill:"Descomposición", story:"Grupo de 4 equipos, todos contra todos.", prompt:"Partidos totales", options:["A) 4","B) 6","C) 8","D) 12"] },
+    { id:23, skill:"Abstracción", story:"12 grupos, pasan 2 primeros + 4 mejores terceros.", prompt:"Equipos a octavos", options:["A) 24","B) 28","C) 32","D) 16"] },
+    { id:24, skill:"Reconocimiento de patrones", story:"Cifrado: siguiente letra (A→B). 'DPNQB'", prompt:"Palabra original", options:["A) COPA","B) CORA","C) CONMEBOL","D) CORAZON"] },
+    { id:25, skill:"Abstracción", story:"Doble goles segundo tiempo que primero. Total 6.", prompt:"Goles primer tiempo", options:["A) 2","B) 3","C) 4","D) 1"] },
+    { id:26, skill:"Evaluación", story:"Distancias: AB=5, BC=7, AC=9. Ruta más corta A→...→C", options:["A) A-B-C (12)","B) A-C-B (16)","C) A-B-A-C","D) A-C"] },
+    { id:27, skill:"Evaluación", story:"Argentina 6pts(+3), Brasil6(+5), Uruguay4(+2).", prompt:"Primer lugar", options:["A) Argentina","B) Brasil","C) Uruguay","D) Empate"] },
+    { id:28, skill:"Pensamiento algorítmico", story:"4 bombos, 8 equipos cada uno. Elegir uno de bombo1 y otro de bombo2.", prompt:"Combinaciones", options:["A) 16","B) 64","C) 32","D) 8"] },
+    { id:29, skill:"Simulación", story:"Posesión baja 10% cada 10min. Inicio 60%.", prompt:"% a los 30min", options:["A) 43.74%","B) 48.6%","C) 54%","D) 40%"] },
+    { id:30, skill:"Abstracción", story:"Códigos binarios 3 bits con exactamente dos unos.", prompt:"Cantidad", options:["A) 2","B) 3","C) 4","D) 6"] },
+    { id:31, skill:"Generalización", story:"6 equipos, todos contra todos.", prompt:"Partidos", options:["A) 10","B) 12","C) 15","D) 18"] },
+    { id:32, skill:"Simulación", story:"Recorrido: CDMX→GDL→VAN→SEA→MIA→CDMX. Distancias:800,1200,700,1500,900 km.", prompt:"Total", options:["A) 4200","B) 3800","C) 5100","D) 4700"] },
+    { id:33, skill:"Depuración", story:"Penalti si (falta área Y no fuera juego) O mano intencional.", prompt:"¿Cuándo es penal?", options:["A) Falta área + fuera juego","B) Mano fuera área","C) Falta área Y no fuera juego","D) Mano no intencional"] },
+    { id:34, skill:"Descomposición", story:"Condiciones: lluvia (sí/no), viento (sí/no).", prompt:"Combinaciones", options:["A) 2","B) 3","C) 4","D) 6"] },
+    { id:35, skill:"Reconocimiento de patrones", story:"Cifrado César desplazamiento 3 a 'MUNDIAL'", prompt:"Resultado", options:["A) PXQGLDO","B) PXQJDO","C) PXQGLD","D) QYRHME"] },
+    { id:36, skill:"Pensamiento algorítmico", story:"4 partidos a 3 estadios, sin repetir estadio en mismo horario (orden importa).", prompt:"Formas", options:["A) 24","B) 12","C) 64","D) 81"] },
+    { id:37, skill:"Abstracción", story:"Marcador muestra últimos 5 goles. Se anotan 8.", prompt:"Goles visibles", options:["A) 5","B) 8","C) 3","D) 10"] },
+    { id:38, skill:"Reconocimiento de patrones", story:"Asistencias: Fibonacci 1,1,2,3,5,8...", prompt:"7º término", options:["A) 8","B) 13","C) 21","D) 34"] },
+    { id:39, skill:"Evaluación", story:"Dos amarillas = roja; roja directa por falta grave.", prompt:"¿De cuántas faltas depende roja directa?", options:["A) 1","B) 2","C) 3","D) No depende del número"] },
+    { id:40, skill:"Generalización", story:"VAR: 15 seg por revisión, 6 revisiones.", prompt:"Tiempo total", options:["A) 1min30s","B) 2min","C) 90s","D) 120s"] },
+    { id:41, skill:"Simulación", story:"Probabilidad gol 0.75.", prompt:"Probabilidad fallar dos penales seguidos", options:["A) 0.0625","B) 0.125","C) 0.25","D) 0.5625"] },
+    { id:42, skill:"Abstracción", story:"'golgolgol' comprimido a 'gol3'.", prompt:"Caracteres ahorrados", options:["A) 3","B) 4","C) 5","D) 6"] },
+    { id:43, skill:"Pensamiento algorítmico", story:"Tiempos: 90,75,120,60. Ordenar ascendente.", prompt:"Tercer valor", options:["A) 75","B) 90","C) 120","D) 60"] },
+    { id:44, skill:"Abstracción", story:"Neurona: peso1*entrada1 + peso2*entrada2 = 0.5*2 + 0.3*4", prompt:"Resultado", options:["A) 2.2","B) 1.2","C) 3.2","D) 4.2"] },
+    { id:45, skill:"Reconocimiento de patrones", story:"¿Palíndromo? Guadalajara, Vancouver, Seattle.", prompt:"Opción", options:["A) Guadalajara","B) Vancouver","C) Seattle","D) Ninguno"] },
+    { id:46, skill:"Evaluación", story:"Filtro: eliminar >30 años o <5 goles. 20 jugadores, quedan 12.", prompt:"Eliminados", options:["A) 6","B) 8","C) 10","D) 12"] },
+    { id:47, skill:"Descomposición", story:"Estados: Inicio, Jugando, VAR, Fin. Transiciones: I→J, J→VAR, VAR→J, J→F.", prompt:"Total transiciones", options:["A) 3","B) 4","C) 5","D) 6"] },
+    { id:48, skill:"Pensamiento algorítmico", story:"Binario: 101 (5) + 011 (3)", prompt:"Suma binaria", options:["A) 1000","B) 1001","C) 1010","D) 1100"] }
+  ];
+
+  // Estado
+  let student = { grupo: "7º", numeroLista: "", nombre: "", apellido: "" };
+  let answers = JSON.parse(localStorage.getItem("pc_answers")) || {};
+  let score = parseInt(localStorage.getItem("pc_score")) || 0;
+  let currentChallenge = null;
+
+  // DOM elements
+  const grupoSelect = document.getElementById("grupoSelect");
+  const listaSelect = document.getElementById("listaSelect");
+  const nombreInput = document.getElementById("nombreInput");
+  const apellidoInput = document.getElementById("apellidoInput");
+  const guardarBtn = document.getElementById("guardarDatosBtn");
+  const spinBtn = document.getElementById("spinBtn");
+  const finishBtn = document.getElementById("finishBtn");
+  const challengeArea = document.getElementById("challengeArea");
+  const progressSpan = document.getElementById("progressInfo");
+  const scoreSpan = document.getElementById("scoreDisplay");
+  const skillsContainer = document.getElementById("skillsContainer");
+  const selectedSkillSpan = document.getElementById("selectedSkillDisplay");
+
+  // Rellenar lista del 1 al 30
+  for(let i=1; i<=30; i++) {
+    let option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    listaSelect.appendChild(option);
+  }
+
+  function updateScoreUI() {
+    scoreSpan.textContent = `${score} puntos`;
+  }
+
+  function recomputeScore() {
+    let newScore = 0;
+    for(let id in answers) {
+      if(answers[id] === correctAnswers[id]) newScore++;
+    }
+    score = newScore;
+    localStorage.setItem("pc_score", score);
+    updateScoreUI();
+  }
+
+  function updateProgress() {
+    const answered = Object.keys(answers).length;
+    progressSpan.textContent = `Desafíos respondidos: ${answered} / ${challengesData.length}`;
+  }
+
+  function saveStudentData() {
+    student = {
+      grupo: grupoSelect.value,
+      numeroLista: listaSelect.value,
+      nombre: nombreInput.value.trim(),
+      apellido: apellidoInput.value.trim()
+    };
+    localStorage.setItem("pc_student", JSON.stringify(student));
+    document.getElementById("studentConfirm").innerHTML = `✔ Datos guardados: ${student.grupo} | N°${student.numeroLista} | ${student.nombre} ${student.apellido}`;
+  }
+
+  function loadStudentData() {
+    const saved = localStorage.getItem("pc_student");
+    if(saved) {
+      const s = JSON.parse(saved);
+      grupoSelect.value = s.grupo || "7º";
+      listaSelect.value = s.numeroLista || "";
+      nombreInput.value = s.nombre || "";
+      apellidoInput.value = s.apellido || "";
+      student = { grupo: grupoSelect.value, numeroLista: listaSelect.value, nombre: nombreInput.value, apellido: apellidoInput.value };
+      if(student.nombre) document.getElementById("studentConfirm").innerHTML = `Datos cargados: ${student.grupo} | N°${student.numeroLista} | ${student.nombre} ${student.apellido}`;
+    }
+  }
+
+  function getUnansweredBySkill(skillName) {
+    return challengesData.filter(ch => ch.skill === skillName && !answers[ch.id]);
+  }
+
+  function displayChallenge(ch) {
+    challengeArea.style.display = "block";
+    challengeArea.innerHTML = `
+      <div class="challenge-card">
+        <div style="font-weight:bold; margin-bottom:0.5rem;">🧠 Destreza: ${ch.skill}</div>
+        <div class="story-box"><strong>📖 Historia:</strong> ${ch.story}</div>
+        <div class="prompt-box"><strong>🎯 Lo que se pide:</strong> ${ch.prompt}</div>
+        <ul class="options-list">
+          ${ch.options.map(opt => `<li>${opt}</li>`).join('')}
+        </ul>
+        <div class="answer-area">
+          <select id="answerSelect" class="answer-select">
+            <option value="">-- Elige una opción --</option>
+            <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+          </select>
+          <button id="saveCurrentBtn" class="save-btn">Guardar respuesta</button>
+        </div>
+        <div id="fb" class="feedback"></div>
+      </div>
+    `;
+    const saved = answers[ch.id];
+    if(saved) document.getElementById("answerSelect").value = saved;
+    document.getElementById("saveCurrentBtn").addEventListener("click", () => saveCurrentAnswer(ch));
+  }
+
+  function saveCurrentAnswer(ch) {
+    const selected = document.getElementById("answerSelect").value;
+    if(!selected) {
+      document.getElementById("fb").innerHTML = "❌ Selecciona una opción antes de guardar.";
+      return;
+    }
+    const prevAnswer = answers[ch.id];
+    answers[ch.id] = selected;
+    localStorage.setItem("pc_answers", JSON.stringify(answers));
+    recomputeScore();
+    updateProgress();
+    const isCorrect = (selected === correctAnswers[ch.id]);
+    const fbDiv = document.getElementById("fb");
+    if(isCorrect) {
+      fbDiv.innerHTML = "✅ ¡Correcto! Respuesta guardada. +1 punto.";
+      fbDiv.style.color = "#2E7D32";
+    } else {
+      fbDiv.innerHTML = `❌ Incorrecto. La respuesta correcta era ${correctAnswers[ch.id]}. Respuesta guardada (sin punto).`;
+      fbDiv.style.color = "#C62828";
+    }
+    setTimeout(() => { fbDiv.innerHTML = ""; }, 2500);
+  }
+
+  function spinWheel() {
+    const remaining = challengesData.length - Object.keys(answers).length;
+    if(remaining === 0) {
+      alert("¡Completaste todos los desafíos! Descarga tu informe.");
+      challengeArea.style.display = "none";
+      return;
+    }
+    const randomSkill = skills[Math.floor(Math.random() * skills.length)];
+    selectedSkillSpan.innerHTML = `Destreza seleccionada: <strong>${randomSkill}</strong>`;
+    let available = getUnansweredBySkill(randomSkill);
+    if(available.length === 0) {
+      available = challengesData.filter(ch => !answers[ch.id]);
+      selectedSkillSpan.innerHTML = `Destreza: ${randomSkill} (sin pendientes, se asigna otro)`;
+    }
+    if(available.length === 0) return;
+    const chosen = available[Math.floor(Math.random() * available.length)];
+    currentChallenge = chosen;
+    displayChallenge(currentChallenge);
+  }
+
+  function downloadReport() {
+    if(!student.nombre || !student.apellido) {
+      alert("Completa tus datos (nombre y apellido) antes de finalizar.");
+      return;
+    }
+    let content = "INFORME DE DESAFÍOS - PENSAMIENTO COMPUTACIONAL (MUNDIAL 2026)\n";
+    content += "===============================================================\n";
+    content += `Estudiante: ${student.nombre} ${student.apellido}\n`;
+    content += `Grupo: ${student.grupo}  |  N° lista: ${student.numeroLista}\n`;
+    content += `Fecha: ${new Date().toLocaleString()}\n`;
+    content += `Desafíos respondidos: ${Object.keys(answers).length} / ${challengesData.length}\n`;
+    content += `Puntaje automático: ${score} / ${challengesData.length}\n`;
+    content += "===============================================================\n\n";
+    content += "RÚBRICA DE EVALUACIÓN (Docente):\n";
+    content += "Niveles: Básico (0-16), Intermedio (17-32), Avanzado (33-48).\n\n";
+    content += "RESPUESTAS:\n";
+    for(let ch of challengesData) {
+      const ans = answers[ch.id] || "(No respondida)";
+      const status = (ans === correctAnswers[ch.id]) ? "✓ Correcta" : (ans !== "(No respondida)" ? "✗ Incorrecta" : "Sin responder");
+      content += `${ch.id} [${ch.skill}] - ${ch.prompt}\n`;
+      content += `   Respuesta: ${ans}  |  ${status} (correcta: ${correctAnswers[ch.id]})\n`;
+      content += "   -------------------------\n";
+    }
+    const blob = new Blob([content], {type: "text/plain"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `informe_${student.nombre}_${student.apellido}.txt`;
+    link.click();
+    URL.revokeObjectURL(blob);
+  }
+
+  // Render skills
+  skillsContainer.innerHTML = skills.map(s => `<span class="skill-badge">${s}</span>`).join("");
+
+  // Anti-copia
+  function block(e) {
+    if(e.type === 'copy' || e.type === 'cut' || (e.ctrlKey && (e.key === 'c' || e.key === 'C'))) {
+      e.preventDefault(); alert("No se permite copiar.");
+      return false;
+    }
+    if(e.type === 'contextmenu') { e.preventDefault(); return false; }
+    if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+      e.preventDefault(); alert("Acceso no permitido.");
+      return false;
+    }
+  }
+  document.addEventListener('copy', block);
+  document.addEventListener('cut', block);
+  document.addEventListener('contextmenu', block);
+  document.addEventListener('keydown', block);
+
+  // Inicialización
+  loadStudentData();
+  recomputeScore();
+  updateProgress();
+  guardarBtn.addEventListener("click", saveStudentData);
+  spinBtn.addEventListener("click", spinWheel);
+  finishBtn.addEventListener("click", downloadReport);
+  selectedSkillSpan.innerHTML = "Presiona 'Girar ruleta' para comenzar";
+</script>
+</body>
+</html>
